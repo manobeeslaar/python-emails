@@ -20,7 +20,7 @@ class ReRules:
     re_meta = b"(?i)(?<=<meta).*?(?=>)"
     re_is_http_equiv = b"http-equiv=\"?'?content-type\"?'?"
     re_parse_http_equiv = b"content=\"?'?([^\"'>]+)"
-    re_charset = b"charset=\"?'?([\w-]+)\"?'?"
+    re_charset = br"charset=\"?'?([\w-]+)\"?'?"
 
     def __init__(self, conv=None):
         if conv is None:
