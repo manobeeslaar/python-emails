@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
+
 python-emails
 ~~~~~~~~~~~~~
 
@@ -110,6 +111,7 @@ settings.update(
     version=find_version('emails/__init__.py'),
     description='Modern python library for emails.',
     long_description=__doc__,
+    long_description_content_type='text/markdown',
     author='Sergey Lavrinenko',
     author_email='s@lavr.me',
     url='https://github.com/lavr/python-emails',
@@ -120,20 +122,18 @@ settings.update(
               'emails.store',
               'emails.backend',
               'emails.backend.smtp',
+              'emails.backend.inmemory',
               'emails.template',
               'emails.packages',
               'emails.packages.dkim'
              ],
     scripts=['scripts/make_rfc822.py'],
     install_requires=['cssutils', 'lxml', 'chardet', 'python-dateutil', 'requests', 'premailer'],
-    license=open('LICENSE').read(),
-    #test_suite = "emails.testsuite.test_all",
     zip_safe=False,
     classifiers=(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        'License :: OSI Approved :: BSD License',
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",

@@ -1,6 +1,8 @@
 # encoding: utf-8
 from __future__ import unicode_literals
 __all__ = ['guess_charset', 'fix_content_type']
+from email.message import Message
+
 
 import re
 import warnings
@@ -52,7 +54,7 @@ class ReRules:
     re_meta = b"(?i)(?<=<meta).*?(?=>)"
     re_is_http_equiv = b"http-equiv=\"?'?content-type\"?'?"
     re_parse_http_equiv = b"content=\"?'?([^\"'>]+)"
-    re_charset = b"charset=\"?'?([\w-]+)\"?'?"
+    re_charset = b"charset=\"?'?([\\w-]+)\"?'?"
 
     def __init__(self, conv=None):
         if conv is None:
@@ -93,6 +95,10 @@ def guess_charset(headers, html):
         if content_type:
             _, params = parse_header(content_type)
             r = params.get('charset', None)
+            msg = Message()
+            msg.add_header('content-type', content_type)
+            r = msg.get_param('charset')
+
             if r:
                 return r
 
