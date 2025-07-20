@@ -3,8 +3,39 @@ from __future__ import unicode_literals
 __all__ = ['guess_charset', 'fix_content_type']
 
 import re
-import cgi
 import warnings
+
+# Handle cgi module removal in Python 3.13+
+try:
+    import cgi
+    parse_header = cgi.parse_header
+except ImportError:
+    # Python 3.13+ fallback
+    from email.utils import parseaddr
+    from email import message_from_string
+    
+    def parse_header(value):
+        """Parse a Content-Type like header.
+        
+        This is a replacement for cgi.parse_header() which was removed in Python 3.13.
+        """
+        if not value:
+            return '', {}
+        
+        # Split on semicolon to separate main value from parameters
+        parts = value.split(';', 1)
+        main_value = parts[0].strip()
+        
+        params = {}
+        if len(parts) > 1:
+            # Parse parameters
+            param_string = parts[1]
+            # Create a fake email message to use email.message parsing
+            fake_msg = message_from_string(f"Content-Type: {value}")
+            params = fake_msg.get_params()[1:]  # Skip the main type
+            params = dict(params) if params else {}
+        
+        return main_value, params
 
 try:
     import charade as chardet
@@ -60,7 +91,7 @@ def guess_charset(headers, html):
     if headers:
         content_type = headers['content-type']
         if content_type:
-            _, params = cgi.parse_header(content_type)
+            _, params = parse_header(content_type)
             r = params.get('charset', None)
             if r:
                 return r
